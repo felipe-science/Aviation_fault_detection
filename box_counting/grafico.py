@@ -1,3 +1,4 @@
+import os
 from numpy import loadtxt, linspace
 from pylab import scatter, plot, show, title, xlabel, ylabel, tick_params, legend, savefig, grid
 from scipy.optimize import curve_fit
@@ -13,6 +14,8 @@ def ajuste_curva(xd, yd):
     a = param[0]
     b = param[1]
 
+    
+    '''
     pontosx = linspace(xd[0],xd[-1],1000)
     pontosy = []
     for x in pontosx:
@@ -29,13 +32,23 @@ def ajuste_curva(xd, yd):
     show()
 
     print("\nDimensao Fractal = ",a)
+    '''
+
+    return a, b
+
+diretorio = "DADOS_BC_saud_2200rpm"
+
+files_dat = [f for f in os.listdir(diretorio) if f.endswith(".dat")]
 
 
-data = loadtxt("DADOS_BC_saud_2200rpm/DADOS_BC_0.dat",float)
+media_a = 0.0
+for i in range(len(files_dat)):
 
-pontosx = data[:,0]
-pontosy = data[:,1]
+    data = loadtxt(f"{diretorio}/{files_dat[i]}")
+    xdata = data[:,0]
+    ydata = data[:,1]
 
-ajuste_curva(pontosx, pontosy)
-show()
+    a, b = ajuste_curva(xdata, ydata)
+    media_a+=a
 
+print(media_a/len(files_dat))

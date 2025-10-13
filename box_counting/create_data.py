@@ -13,6 +13,8 @@ path_saudavel1000rmp = "../data/saudavel/Saud1000.txt"
 path_saudavel1700rpm = "../data/saudavel/Saud1700.txt"
 path_saudavel2200rpm = "../data/saudavel/Saud2200.txt"
 
+path_file = [path_45cm_1000rpm, path_45cm_1700rpm, path_90cm_1000rpm, path_90cm_1700rpm, path_90cm_2200rpm, path_saudavel1000rmp, path_saudavel1700rpm, path_saudavel2200rpm]
+path_save = ['file_45_1000', 'file_45_1700', 'file_90_1000', 'file_90_1700', 'file_90_2200', 'file_sa_1000', 'file_sa_1700', 'file_sa_2200']
 
 def fatiamento(path, Nslice):
 
@@ -32,18 +34,31 @@ def fatiamento(path, Nslice):
 
 Nslice = 100000
 
-time, signals = fatiamento(path_saudavel2200rpm, Nslice)
-time = time/666
 
-for k in range(len(signals)):
 
-    f = open(f"data_{k}.dat", "w")
-    sig = signals[-1]+2
-    for i in range(len(time)):
-        f.write(f"{time[i]} {sig[i]}\n")
-    f.close()
+for i in range(len(path_file)):
 
-    shutil.move(f"data_{k}.dat", f"file_sa_2200/data_{k}.dat")
+    time, signals = fatiamento(path_file[i], Nslice)
+    time = time/666
+
+    print(path_file[i])
+
+    for j in range(len(signals)):
+
+        sig = signals[j]
+
+        minimo = min(sig)
+        sig = sig+abs(minimo)
+        maximo = max(sig)
+        sig = sig*(5/(abs(maximo)))
+
+
+        f = open(f"file_{j}.dat", "w")
+        for k in range(len(sig)):
+            f.write(f"{time[k]} {sig[k]}\n")
+        f.close()
+
+        shutil.move(f"file_{j}.dat", f"{path_save[i]}/data_{j}.dat")
 
     #plt.plot(time, sig)
     #plt.show()

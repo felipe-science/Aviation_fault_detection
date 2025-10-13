@@ -7,7 +7,7 @@
 #define Npontos_bc 6        //Numero de pontos gerado no box-countung  
 #define Lx 5                //Comprimento x da area analisada
 #define Ly 5                //Comprimento y da area analisada  
-#define Nfile 1
+#define Nfile 50
 
 int varredura(float x, float y, float l, float valoresx[Npontos], float valoresy[Npontos]);
 void box_counting(float valoresx[Npontos], float valoresy[Npontos], float bc_logl[Npontos_bc], float bc_logn[Npontos_bc], int idx_file);
@@ -96,8 +96,6 @@ void box_counting(float valoresx[Npontos], float valoresy[Npontos], float bc_log
     sprintf(filename, "DADOS_BC_%d.dat", idx_file);
     FILE *fd = fopen(filename,"w");
 
-    
-    
     l = 1.0;
     while(l > 0.0125)
     {
