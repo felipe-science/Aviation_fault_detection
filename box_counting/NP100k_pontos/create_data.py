@@ -39,7 +39,7 @@ Nslice = 100000
 for i in range(len(path_file)):
 
     time, signals = fatiamento(path_file[i], Nslice)
-    time = time/666
+    time = time/(5*666)
 
     print(path_file[i])
 
@@ -50,7 +50,7 @@ for i in range(len(path_file)):
         minimo = min(sig)
         sig = sig+abs(minimo)
         maximo = max(sig)
-        sig = sig*(5/(abs(maximo)))
+        sig = sig*(1/(abs(maximo)))
 
 
         f = open(f"file_{j}.dat", "w")
