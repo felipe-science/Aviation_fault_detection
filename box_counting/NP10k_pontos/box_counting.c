@@ -29,7 +29,11 @@ int main()
     {
 
         
+<<<<<<< HEAD
         sprintf(filename, "file_90_1700/data_%d.dat", k);
+=======
+        sprintf(filename, "file_sa_2200/data_%d.dat", k);
+>>>>>>> 79e722a8b372afb11db100c9e4380a301c8c7f76
         FILE *fp = fopen(filename, "r");
         if (!fp)
         {
@@ -71,7 +75,10 @@ int main()
         printf("Time = %ld s = %lf min\n", (end - begin),(end - begin)/60.0);
 
         sprintf(old_filename, "DADOS_BC_%d.dat", k);
+
         sprintf(new_filename, "DADOS_BC_90cm_1700rpm/DADOS_BC_%d.dat", k);
+
+
 
         if (rename(old_filename, new_filename) == 0) {
             printf("Arquivo %d movido com sucesso!\n\n",k);
