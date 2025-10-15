@@ -114,13 +114,13 @@ def run_mfdfa(q_list, s_list, theta, sig):
     N = len(sig)
     A = create_matrix(q_list, s_list, theta, sig)
 
-    hq = []
+    hq = np.zeros([len(q_list)])
     log_s = np.log(s_list)
     for i in range(len(q_list)):
         F = A[:,i]
         log_F = np.log(F)
         slope, intercept, r_value, p_value, std_err = linregress(log_s, log_F)
-        hq.append(slope)
+        hq[i] = slope
 
 
     tau = hq*q_list-1
@@ -130,15 +130,14 @@ def run_mfdfa(q_list, s_list, theta, sig):
     return tau, alpha, f_alp
 
 
-Nslice = 100000
+Nslice = 10000
 theta = 1
 q_list = np.linspace(-5,5,11)
-s_list = [128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768]
-s_list = [128, 256, 512, 1024, 2048, 4096]
+s_list = np.array([64, 128, 256, 512, 1024, 2048])
 
 N = Nslice
 
-list_path = [path_saudavel1000rpm, path_45cm_1000rpm, path_90cm_1000rpm]
+list_path = [path_saudavel1700rpm, path_45cm_1700rpm, path_90cm_1700rpm]
 for k in range(3):
 
     path = list_path[k]
@@ -151,23 +150,11 @@ for k in range(3):
 
         match k:
             case 0:
-                f = open(f"alpha_sa_{j}.dat", "w")
-                
-                for i in range(len(alpha)):
-                    f.write(f"{alpha[i]} {f_alpha[i]}\n")
-                f.close()
-                
-                shutil.move(f"alpha_sa_{j}.dat", f"f1000rpm/alpha_sa_{j}.dat")
+                np.savetxt(f"alpha_sa_{j}.dat", np.column_stack((alpha, f_alpha)))
+                shutil.move(f"alpha_sa_{j}.dat", f"f1700rpm/alpha_sa_{j}.dat")
             case 1:
-                f = open(f"alpha_45_{j}.dat", "w")
-                for i in range(len(alpha)):
-                    f.write(f"{alpha[i]} {f_alpha[i]}\n")
-                f.close()
-                shutil.move(f"alpha_45_{j}.dat", f"f1000rpm/alpha_45_{j}.dat")
+                np.savetxt(f"alpha_45_{j}.dat", np.column_stack((alpha, f_alpha)))
+                shutil.move(f"alpha_45_{j}.dat", f"f1700rpm/alpha_45_{j}.dat")
             case 2:
-                f = open(f"alpha_90_{j}.dat", "w")
-                for i in range(len(alpha)):
-                    f.write(f"{alpha[i]} {f_alpha[i]}\n")
-                f.close()
-                shutil.move(f"alpha_90_{j}.dat", f"f1000rpm/alpha_90_{j}.dat")
-                    
+                np.savetxt(f"alpha_90_{j}.dat", np.column_stack((alpha, f_alpha)))
+                shutil.move(f"alpha_90_{j}.dat", f"f1700rpm/alpha_90_{j}.dat")
