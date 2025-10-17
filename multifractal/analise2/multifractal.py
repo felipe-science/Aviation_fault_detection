@@ -82,6 +82,7 @@ def create_matrix(q_list, s_list, theta, y):
 def fatiamento(path, Nslice):
 
     data = np.loadtxt(path, float)
+    data = data[30000:-30000]
     
     time = np.linspace(0,Nslice/30,Nslice)
 
@@ -138,7 +139,7 @@ def graf2(q_list, s_list, A, hq, tau, alpha, f_alp):
     ax[0,1].scatter(q_list, hq, color='blue')
     ax[0,1].set_xlabel(r'$q$', fontsize='16')
     ax[0,1].set_ylabel(r'$h(q)$', fontsize='16')
-    ax[0,1].set_ylim(0,1)
+    
 
     ax[1,0].scatter(q_list, tau, color='red')
     ax[1,0].set_xlabel(r'$q$', fontsize='16')
@@ -147,38 +148,32 @@ def graf2(q_list, s_list, A, hq, tau, alpha, f_alp):
     ax[1,1].scatter(alpha, f_alp, color='green')
     ax[1,1].set_xlabel(r'$\alpha$', fontsize='16')
     ax[1,1].set_ylabel(r'$f(\alpha)$', fontsize='16')
-    ax[1,1].set_xlim(0,1)
-    ax[1,1].set_ylim(0.5,1.5)
-
+    
     plt.savefig('fig2.png', dpi=300)
     plt.show()
 
 
-path_45cm_1000rpm = "../../data/desbalanceamento_45cm/F5-1000.txt"
-path_45cm_1700rpm = "../../data/desbalanceamento_45cm/F5-1700.txt"
+frequency = 1000
 
-path_90cm_1000rpm = "../../data/desbalanceamento_90cm/F6-1000.txt"
-path_90cm_1700rpm = "../../data/desbalanceamento_90cm/F6-1700.txt"
-path_90cm_2200rpm = "../../data/desbalanceamento_90cm/F6-2200.txt"
+path_45cm = f"../../data/desbalanceamento_45cm/F5-{frequency}.txt"
+path_90cm = f"../../data/desbalanceamento_90cm/F6-{frequency}.txt"
+path_saud = f"../../data/saudavel/Saud{frequency}.txt"
 
-path_saudavel1000rpm = "../../data/saudavel/Saud1000.txt"
-path_saudavel1700rpm = "../../data/saudavel/Saud1700.txt"
-path_saudavel2200rpm = "../../data/saudavel/Saud2200.txt"
 
-Nslice = 1000000
+Nslice = 2000
 theta = 1
-q_list = np.linspace(-5,5,11)
-s_list = np.array([16, 32, 64, 128, 256, 512])
+q_list = np.linspace(-10,10,21)
+s_list = np.array([4, 6, 8, 10, 12, 14, 16, 18, 20])
 
 N = Nslice
 
-list_path = [path_saudavel1000rpm, path_45cm_1000rpm, path_90cm_1000rpm]
+list_path = [path_45cm, path_90cm, path_saud]
 for k in range(3):
 
     path = list_path[k]
     time, signals = fatiamento(path, Nslice)
     N_signals = len(signals)
-    N_signals = 1
+    N_signals = 100
 
     for j in range(N_signals):
         sig = signals[j]
@@ -187,13 +182,21 @@ for k in range(3):
         match k:
             case 0:
                 np.savetxt(f"alpha_sa_{j}.dat", np.column_stack((alpha, f_alpha)))
-                shutil.move(f"alpha_sa_{j}.dat", f"f1000rpm/alpha_sa_{j}.dat")
+                np.savetxt(f"q_hq_sa_{j}.dat", np.column_stack((q_list, hq)))
+                shutil.move(f"alpha_sa_{j}.dat", f"f{frequency}rpm/alpha_sa_{j}.dat")
+                shutil.move(f"q_hq_sa_{j}.dat", f"f{frequency}rpm/q_hq_sa_{j}.dat")
             case 1:
                 np.savetxt(f"alpha_45_{j}.dat", np.column_stack((alpha, f_alpha)))
-                shutil.move(f"alpha_45_{j}.dat", f"f1000rpm/alpha_45_{j}.dat")
+                np.savetxt(f"q_hq_45_{j}.dat", np.column_stack((q_list, hq)))
+                shutil.move(f"alpha_45_{j}.dat", f"f{frequency}rpm/alpha_45_{j}.dat")
+                shutil.move(f"q_hq_45_{j}.dat", f"f{frequency}rpm/q_hq_45_{j}.dat")
             case 2:
                 np.savetxt(f"alpha_90_{j}.dat", np.column_stack((alpha, f_alpha)))
-                shutil.move(f"alpha_90_{j}.dat", f"f1000rpm/alpha_90_{j}.dat")
+                np.savetxt(f"q_hq_90_{j}.dat", np.column_stack((q_list, hq)))
+                shutil.move(f"alpha_90_{j}.dat", f"f{frequency}rpm/alpha_90_{j}.dat")
+                shutil.move(f"q_hq_90_{j}.dat", f"f{frequency}rpm/q_hq_90_{j}.dat")
 
+
+    print("Processando...")
 
 graf2(q_list, s_list, A, hq, tau, alpha, f_alpha)

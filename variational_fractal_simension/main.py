@@ -45,7 +45,8 @@ D = 2 - H
 print(f"H = {H:.3f}, Dimensão fractal D = {D:.3f}     name = {name}")
 
 
-plt.loglog(delta, varia, 'o-')
+plt.scatter(logd, logV)
+plt.plot(logd, logV)
 plt.show()
 
 
